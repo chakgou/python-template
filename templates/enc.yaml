@@ -1,0 +1,31 @@
+# {{ vm }}
+# c'est un commentaire {{ vm }}
+classes:
+  {% if users|length > 0 %}
+  userconf:
+    users:
+    {% for user in users %}
+      {{ user }}:
+        boot: true
+    {% endfor %}
+  {% endif %}
+{% for techno in technos %}
+  {{ techno.pp }}:
+    applications:
+    {% for application in techno.applications %}
+      {{ application.label|upper }}
+        plateformes:
+          {{ application.plateform|upper }}:
+            components:
+            {% for component in application.components %}
+              {{ component.label|upper}}:
+              {% if component.instances > 0 %}
+                instances:
+                {% for number in range(1, component.instances + 1) %}
+                  {% set instance_name = application.label|upper + vm[0:3]|upper+ application.plateform|upper %}
+                  {{ instance_name }}{{number}}: {}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+      {% endfor %}
+{% endfor %}
